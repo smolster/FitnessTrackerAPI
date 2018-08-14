@@ -1,11 +1,12 @@
 import Authentication
-import FluentSQLite
+import FluentPostgreSQL
 import Vapor
 
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     // Register providers first
-    try services.register(FluentSQLiteProvider())
+    
+    try services.register(FluentPostgreSQLProvider())
     try services.register(AuthenticationProvider())
 
     // Register routes to the router
@@ -21,19 +22,19 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(middlewares)
 
     // Configure a SQLite database
-    let sqlite = try SQLiteDatabase(storage: .memory)
+    let postgres = try PostgreSQLDatabase(config: .default())
 
     // Register the configured SQLite database to the database config.
     var databases = DatabasesConfig()
-    databases.enableLogging(on: .sqlite)
-    databases.add(database: sqlite, as: .sqlite)
+    databases.enableLogging(on: .psql)
+    databases.add(database: postgres, as: .psql)
     services.register(databases)
 
     /// Configure migrations
     var migrations = MigrationConfig()
-    migrations.add(model: User.self, database: .sqlite)
-    migrations.add(model: UserToken.self, database: .sqlite)
-    migrations.add(model: Todo.self, database: .sqlite)
+    migrations.add(model: User.self, database: .psql)
+    migrations.add(model: UserToken.self, database: .psql)
+    migrations.add(model: Todo.self, database: .psql)
     services.register(migrations)
 
 }

@@ -13,11 +13,11 @@ final class Meal: SQLiteModel {
     
     var entryDate: Date
     
-    var userId: User.ID
+    var userID: User.ID
     
-    init(id: Int? = nil, entryDate: Date, userId: User.ID) {
+    init(id: Int? = nil, entryDate: Date, userID: User.ID) {
         self.id = id
         self.entryDate = entryDate
-        self.userId = userId
+        self.userID = userID
     }
 }
